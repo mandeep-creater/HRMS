@@ -1,4 +1,5 @@
 package com.hrms.Entity;
+
 import com.hrms.enums.Gender;
 import com.hrms.enums.Role;
 import com.hrms.enums.Status;
@@ -15,21 +16,22 @@ import java.util.List;
 
 @Entity
 @Table(name = "employee")
-public class Employee implements UserDetails {
+public class Employee extends BaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long eId;
 
-    private  String companyCode;
+    private String companyCode;
 
     private String eName;
-
-    private String eEmail;
+    @Column(name = "e_email")
+    private String email;
 
     private String ePassword;
 
-    private  String eDisgnation;
+    private String eDisgnation;
+
     @Column(precision = 15, scale = 2)
     private BigDecimal eSalary;
 
@@ -37,33 +39,33 @@ public class Employee implements UserDetails {
 
     private Long eManagerId;
 
-    private  Long eCreatedByHrId;
+    private Long eCreatedByHrId;
 
-
-
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
     private Role role;
+
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
 
     private String ePhone;
 
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private Status estatus;
-    @Enumerated(value = EnumType.STRING)
-    private Gender eGender;
 
+    @Enumerated(EnumType.STRING)
+    private Gender eGender;
 
     private LocalDateTime createdAt;
 
     private LocalDateTime updateAt;
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "company_id")
     private Company company;
 
-
-    // ---------- UserDetails Methods ----------- //
+    // ---------------- UserDetails ----------------
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -71,133 +73,96 @@ public class Employee implements UserDetails {
     }
 
     @Override
-    public  String getPassword() {
+    public String getPassword() {
         return ePassword;
     }
-
 
     @Override
     public String getUsername() {
-        return eEmail;
+        return email;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+    @Override public boolean isAccountNonExpired() { return true; }
+    @Override public boolean isAccountNonLocked() { return true; }
+    @Override public boolean isCredentialsNonExpired() { return true; }
+    @Override public boolean isEnabled() { return true; }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+    // ---------------- Getters & Setters ----------------
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    //constructor
-
-    public Employee() {
-    }
-
-    public Employee(String companyCode, String eName, String eEmail, String ePassword, String eDisgnation, BigDecimal eSalary, Date eJoinDate, Long eManagerId, Long eCreatedByHrId, Role role, Department department, String ePhone, Status estatus, Gender eGender, LocalDateTime createdAt, LocalDateTime updateAt, Company company) {
-        this.companyCode = companyCode;
-        this.eName = eName;
-        this.eEmail = eEmail;
-        this.ePassword = ePassword;
-        this.eDisgnation = eDisgnation;
-        this.eSalary = eSalary;
-        this.eJoinDate = eJoinDate;
-        this.eManagerId = eManagerId;
-        this.eCreatedByHrId = eCreatedByHrId;
-        this.role = role;
-        this.department = department;
-        this.ePhone = ePhone;
-        this.estatus = estatus;
-        this.eGender = eGender;
-        this.createdAt = createdAt;
-        this.updateAt = updateAt;
-        this.company = company;
-    }
-
-    public String geteDisgnation() {
-        return eDisgnation;
-    }
-
-    public void seteDisgnation(String eDisgnation) {
-        this.eDisgnation = eDisgnation;
-    }
-
-    public BigDecimal geteSalary() {
-        return eSalary;
-    }
-
-    public void seteSalary(BigDecimal eSalary) {
-        this.eSalary = eSalary;
-    }
-
-    public Date geteJoinDate() {
-        return eJoinDate;
-    }
-
-    public void seteJoinDate(Date eJoinDate) {
-        this.eJoinDate = eJoinDate;
-    }
-
-    public Status getEstatus() {
-        return estatus;
-    }
-
-    public void setEstatus(Status estatus) {
-        this.estatus = estatus;
-    }
-
-    public Gender geteGender() {
-        return eGender;
-    }
-
-    public void seteGender(Gender eGender) {
-        this.eGender = eGender;
-    }
-
-    public Long geteId() {
+    public Long getEId() {
         return eId;
     }
 
-    public void seteId(Long eId) {
+    public void setEId(Long eId) {
         this.eId = eId;
     }
 
+    public String getCompanyCode() {
+        return companyCode;
+    }
 
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
+    }
 
-    public String geteName() {
+    public String getEName() {
         return eName;
     }
 
-    public void seteName(String eName) {
+    public void setEName(String eName) {
         this.eName = eName;
     }
 
-    public String geteEmail() {
-        return eEmail;
+    public String getEmail() {
+        return email;
     }
 
-    public void seteEmail(String eEmail) {
-        this.eEmail = eEmail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getePassword() {
-        return ePassword;
-    }
-
-    public void setePassword(String ePassword) {
+    public void setEPassword(String ePassword) {
         this.ePassword = ePassword;
+    }
+
+    public String getEDisgnation() {
+        return eDisgnation;
+    }
+
+    public void setEDisgnation(String eDisgnation) {
+        this.eDisgnation = eDisgnation;
+    }
+
+    public BigDecimal getESalary() {
+        return eSalary;
+    }
+
+    public void setESalary(BigDecimal eSalary) {
+        this.eSalary = eSalary;
+    }
+
+    public Date getEJoinDate() {
+        return eJoinDate;
+    }
+
+    public void setEJoinDate(Date eJoinDate) {
+        this.eJoinDate = eJoinDate;
+    }
+
+    public Long getEManagerId() {
+        return eManagerId;
+    }
+
+    public void setEManagerId(Long eManagerId) {
+        this.eManagerId = eManagerId;
+    }
+
+    public Long getECreatedByHrId() {
+        return eCreatedByHrId;
+    }
+
+    public void setECreatedByHrId(Long eCreatedByHrId) {
+        this.eCreatedByHrId = eCreatedByHrId;
     }
 
     public Role getRole() {
@@ -216,30 +181,28 @@ public class Employee implements UserDetails {
         this.department = department;
     }
 
-    public String getePhone() {
+    public String getEPhone() {
         return ePhone;
     }
 
-    public void setePhone(String ePhone) {
+    public void setEPhone(String ePhone) {
         this.ePhone = ePhone;
     }
 
-
-
-    public Company getCompany() {
-        return company;
+    public Status getEstatus() {
+        return estatus;
     }
 
-    public void setCompany(Company company) {
-        this.company = company;
+    public void setEstatus(Status estatus) {
+        this.estatus = estatus;
     }
 
-    public String getCompanyCode() {
-        return companyCode;
+    public Gender getEGender() {
+        return eGender;
     }
 
-    public void setCompanyCode(String companyCode) {
-        this.companyCode = companyCode;
+    public void setEGender(Gender eGender) {
+        this.eGender = eGender;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -258,22 +221,11 @@ public class Employee implements UserDetails {
         this.updateAt = updateAt;
     }
 
-    public Long geteManagerId() {
-        return eManagerId;
+    public Company getCompany() {
+        return company;
     }
 
-    public void seteManagerId(Long eManagerId) {
-        this.eManagerId = eManagerId;
+    public void setCompany(Company company) {
+        this.company = company;
     }
-
-    public Long geteCreatedByHrId() {
-        return eCreatedByHrId;
-    }
-
-    public void seteCreatedByHrId(Long eCreatedByHrId) {
-        this.eCreatedByHrId = eCreatedByHrId;
-    }
-
-
 }
-

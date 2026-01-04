@@ -21,9 +21,10 @@ public class JwtService {
     private long accessTokenExpire =86400000; // in milliseconds
 
     // Generate access token
-    public String generateAccessToken(UserDetails user) {
+    public String generateAccessToken(UserDetails user ,  String companyCode) {
         return Jwts.builder()
                 .subject(user.getUsername())
+                .claim("companyCode", companyCode)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + accessTokenExpire))
                 .signWith(getSignInKey())
@@ -33,12 +34,17 @@ public class JwtService {
     // Validate access token
     public boolean isTokenValid(String token, UserDetails user) {
         final String username = extractUsername(token);
-        return (username.equals(user.getUsername()) && !isTokenExpired(token));
+        final String tokenCompanyCode = extractCompanyCode(token);
+        return (username.equals(user.getUsername())  && !isTokenExpired(token));
     }
 
     // Extract username (subject)
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public String extractCompanyCode(String token) {
+        return extractClaim(token, claims -> claims.get("companyCode", String.class));
     }
 
     // Check if token is expired

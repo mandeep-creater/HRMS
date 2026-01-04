@@ -3,7 +3,9 @@ package com.hrms.ResponseDTO;
 
 
 import com.hrms.enums.AttendanceStatus;
+import com.hrms.enums.WorkType;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -11,27 +13,25 @@ import java.time.LocalDateTime;
 
 public class AttendanceResponseDTO {
 
-    private Long attendanceId;
+        private Long attendanceId;
+        private LocalDate date;
+        private LocalDateTime checkIn;
+        private LocalDateTime checkOut;
+        private BigDecimal latitude;
+        private BigDecimal longitude;
+        private String ipAddress;
+        private AttendanceStatus status;
+        private WorkType workMode;
+        private Long employeeId;
+        private String employeeName; // optional for readability
 
-    private LocalDate date;
+        private String email;
+        private Long companyLocationId;
+        private String companyLocationName; // optional
 
-    private LocalDateTime checkIn;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
 
-    private LocalDateTime checkOut;
-
-    private Double latitude;
-
-    private Double longitude;
-
-    private String ipAddress;
-
-    private AttendanceStatus status;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
-
-    private Long employeeId;    // or employeeName/email if required
 
     public Long getAttendanceId() {
         return attendanceId;
@@ -65,19 +65,19 @@ public class AttendanceResponseDTO {
         this.checkOut = checkOut;
     }
 
-    public Double getLatitude() {
+    public BigDecimal getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Double latitude) {
+    public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
     }
 
-    public Double getLongitude() {
+    public BigDecimal getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Double longitude) {
+    public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
     }
 
@@ -97,6 +97,54 @@ public class AttendanceResponseDTO {
         this.status = status;
     }
 
+    public WorkType getWorkMode() {
+        return workMode;
+    }
+
+    public void setWorkMode(WorkType workMode) {
+        this.workMode = workMode;
+    }
+
+    public Long getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Long getCompanyLocationId() {
+        return companyLocationId;
+    }
+
+    public void setCompanyLocationId(Long companyLocationId) {
+        this.companyLocationId = companyLocationId;
+    }
+
+    public String getCompanyLocationName() {
+        return companyLocationName;
+    }
+
+    public void setCompanyLocationName(String companyLocationName) {
+        this.companyLocationName = companyLocationName;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -112,13 +160,4 @@ public class AttendanceResponseDTO {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-
-    public Long getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
-    }
 }
-

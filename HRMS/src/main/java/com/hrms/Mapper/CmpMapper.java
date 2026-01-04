@@ -3,10 +3,12 @@ package com.hrms.Mapper;
 import com.hrms.DTO.CompanyDTO;
 import com.hrms.Entity.Company;
 import com.hrms.RequestsDTO.CompanyRequestDTO;
+import com.hrms.ResponseDTO.CompanyDropdownDTO;
 import com.hrms.ResponseDTO.CompanyResponseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CmpMapper {

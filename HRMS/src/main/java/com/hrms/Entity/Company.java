@@ -9,6 +9,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "company")
+//@NamedStoredProcedureQuery(
+//        name = "Company.getActiveCompanies",
+//        procedureName = "get_active_companies",
+//        resultClasses = Company.class
+//)
 public class Company extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,13 +28,15 @@ public class Company extends BaseEntity{
     private String companyPhone;
 
     private  String companyEmail;
-
+    @Column(name="is_active")
     private  boolean is_active = true ;
 
 
 
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Employee> employees;
+    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
+    private List<CompanyLocation>companyLocations;
 
     public Company() {
     }
@@ -113,7 +120,15 @@ public class Company extends BaseEntity{
         this.is_active = is_active;
     }
 
-//    public LocalDateTime getCreated_at() {
+    public List<CompanyLocation> getCompanyLocations() {
+        return companyLocations;
+    }
+
+    public void setCompanyLocations(List<CompanyLocation> companyLocations) {
+        this.companyLocations = companyLocations;
+    }
+
+    //    public LocalDateTime getCreated_at() {
 //        return created_at;
 //    }
 //
@@ -128,5 +143,20 @@ public class Company extends BaseEntity{
 //    public void setUpdated_at(LocalDateTime updated_at) {
 //        this.updated_at = updated_at;
 //    }
+
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "cId=" + cId +
+                ", companyCode='" + companyCode + '\'' +
+                ", companyName='" + companyName + '\'' +
+                ", companyAddress='" + companyAddress + '\'' +
+                ", companyPhone='" + companyPhone + '\'' +
+                ", companyEmail='" + companyEmail + '\'' +
+                ", is_active=" + is_active +
+                ", employees=" + employees +
+                '}';
+    }
 }
 

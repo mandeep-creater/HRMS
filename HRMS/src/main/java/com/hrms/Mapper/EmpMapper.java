@@ -4,11 +4,12 @@ import com.hrms.Entity.Employee;
 import com.hrms.Response.EmpRegistrationRequest;
 import com.hrms.Response.EmpRegistrationResponse;
 
+
 public class EmpMapper {
     public static Employee toEntity(EmpRegistrationRequest dto) {
         Employee emp = new Employee();
-       emp.seteName(dto.getName());
-        emp.seteEmail(dto.getEmail());
+       emp.setEName(dto.getName());
+        emp.setEmail(dto.getEmail());
 
         return emp;
     }
@@ -17,8 +18,11 @@ public class EmpMapper {
      EmpRegistrationResponse response = new EmpRegistrationResponse();
 
 
-        response.setName(emp.geteName());
-        response.setEmail(emp.geteEmail());
+        response.setName(emp.getEName());
+        response.setEmail(emp.getEmail());
         return response;
     }
+
+
+
 }

@@ -15,7 +15,7 @@ public class EmployeeDTO {
 
     private String eName;
 
-    private String eEmail;
+    private String email;
 
     private String eDisgnation;
 
@@ -67,12 +67,12 @@ public class EmployeeDTO {
         this.eName = eName;
     }
 
-    public String geteEmail() {
-        return eEmail;
+    public String getEmail() {
+        return email;
     }
 
     public void seteEmail(String eEmail) {
-        this.eEmail = eEmail;
+        this.email = eEmail;
     }
 
     public String geteDisgnation() {

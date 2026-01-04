@@ -13,13 +13,15 @@ public class DepartmentResponseDTO {
 
     private boolean isActive;
 
+    private  String companyCode;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
 
     private Long companyId;        // or companyName
 
-    private List<Long> employeeIds; // optional
+//    private List<Long> employeeIds; // optional
 
     public Long getId() {
         return id;
@@ -69,11 +71,19 @@ public class DepartmentResponseDTO {
         this.companyId = companyId;
     }
 
-    public List<Long> getEmployeeIds() {
-        return employeeIds;
+//    public List<Long> getEmployeeIds() {
+//        return employeeIds;
+//    }
+
+    public String getCompanyCode() {
+        return companyCode;
     }
 
-    public void setEmployeeIds(List<Long> employeeIds) {
-        this.employeeIds = employeeIds;
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
     }
+
+//    public void setEmployeeIds(List<Long> employeeIds) {
+//        this.employeeIds = employeeIds;
+//    }
 }

@@ -3,6 +3,7 @@ package com.hrms.Filter;
 
 
 import com.hrms.Config.JwtAuthEntryPoint;
+import com.hrms.Entity.Employee;
 import com.hrms.ServiceImpl.CompanyServiceImpl;
 import com.hrms.ServiceImpl.EmpServiceImpl;
 import com.hrms.ServiceImpl.JwtService;
@@ -52,6 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String token = authHeader.substring(7);
         try {
             final String username = jwtService.extractUsername(token);
+            final String companyCode= jwtService.extractCompanyCode(token);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = empServiceImpl.loadUserByUsername(username);
@@ -60,13 +62,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities()
                     );
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//                    String dbCompanyCode =  ((Employee) userDetails).getCompanyCode();
+//
+//                    if (!companyCode.equals(dbCompanyCode)) {
+//                        throw new RuntimeException("Company mismatch");
+//                    }
+//                    authToken.setDetails(
+//                            new WebAuthenticationDetailsSource().buildDetails(request)
+//                    );
+                    authToken.setDetails(companyCode);
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
             filterChain.doFilter(request, response);
         } catch (Exception ex) {
-            jwtAuthEntryPoint.commence(request, response, new AuthenticationException("Invalid or expired token", ex) {});
+            jwtAuthEntryPoint.commence(
+                    request,
+                    response,
+                    new AuthenticationException("Invalid or expired token", ex) {}
+            );
 
         }
 }

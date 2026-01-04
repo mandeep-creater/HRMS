@@ -1,14 +1,16 @@
 package com.hrms.Entity;
 
 import com.hrms.enums.AttendanceStatus;
+import com.hrms.enums.WorkType;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name="attendance")
-public class Attendance {
+public class Attendance extends  BaseEntity {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,36 +22,30 @@ public class Attendance {
 
         private LocalDateTime checkOut;
 
-        private Double latitude;
+        private BigDecimal latitude;
 
-        private Double longitude;
+        private BigDecimal longitude;
 
         private String ipAddress;
 
         @Enumerated(EnumType.STRING)
         private AttendanceStatus status;
 
-        private LocalDateTime createdAt;
 
-        private LocalDateTime updatedAt;
+        @Enumerated(EnumType.STRING)
+        private WorkType workMode;
+
 
         @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "employee_id")
+        @JoinColumn(name = "company_location_id", nullable = false)
+        private CompanyLocation companyLocation;
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "employee_id",nullable = false)
         private Employee employee;
 
         public Attendance() {
         }
 
-        @PrePersist
-        public void prePersist() {
-            this.createdAt = LocalDateTime.now();
-            this.updatedAt = LocalDateTime.now();
-        }
-
-        @PreUpdate
-        public void preUpdate() {
-            this.updatedAt = LocalDateTime.now();
-        }
 
         // Getters & Setters
 
@@ -78,19 +74,19 @@ public class Attendance {
                 this.checkOut = checkOut;
         }
 
-        public Double getLatitude() {
+        public BigDecimal getLatitude() {
                 return latitude;
         }
 
-        public void setLatitude(Double latitude) {
+        public void setLatitude(BigDecimal latitude) {
                 this.latitude = latitude;
         }
 
-        public Double getLongitude() {
+        public BigDecimal getLongitude() {
                 return longitude;
         }
 
-        public void setLongitude(Double longitude) {
+        public void setLongitude(BigDecimal longitude) {
                 this.longitude = longitude;
         }
 
@@ -110,21 +106,6 @@ public class Attendance {
                 this.status = status;
         }
 
-        public LocalDateTime getCreatedAt() {
-                return createdAt;
-        }
-
-        public void setCreatedAt(LocalDateTime createdAt) {
-                this.createdAt = createdAt;
-        }
-
-        public LocalDateTime getUpdatedAt() {
-                return updatedAt;
-        }
-
-        public void setUpdatedAt(LocalDateTime updatedAt) {
-                this.updatedAt = updatedAt;
-        }
 
         public Employee getEmployee() {
                 return employee;
@@ -134,7 +115,41 @@ public class Attendance {
                 this.employee = employee;
         }
 
-        public Attendance(LocalDate date, LocalDateTime checkIn, LocalDateTime checkOut, Double latitude, Double longitude, String ipAddress, AttendanceStatus status, LocalDateTime createdAt, LocalDateTime updatedAt, Employee employee) {
+
+        public Long getAttendanceId() {
+                return attendanceId;
+        }
+
+//        public void setAttendanceId(Long attendanceId) {
+//                this.attendanceId = attendanceId;
+//        }
+
+        public WorkType getWorkMode() {
+                return workMode;
+        }
+
+        public void setWorkMode(WorkType workMode) {
+                this.workMode = workMode;
+        }
+
+        public CompanyLocation getCompanyLocation() {
+                return companyLocation;
+        }
+
+        public void setCompanyLocation(CompanyLocation companyLocation) {
+                this.companyLocation = companyLocation;
+        }
+
+        public Attendance(LocalDate date,
+                          LocalDateTime checkIn,
+                          LocalDateTime checkOut,
+                          BigDecimal latitude,
+                          BigDecimal longitude,
+                          String ipAddress,
+                          AttendanceStatus status,
+                          WorkType workMode,
+                          Employee employee,
+                          CompanyLocation companyLocation) {
                 this.date = date;
                 this.checkIn = checkIn;
                 this.checkOut = checkOut;
@@ -142,9 +157,9 @@ public class Attendance {
                 this.longitude = longitude;
                 this.ipAddress = ipAddress;
                 this.status = status;
-                this.createdAt = createdAt;
-                this.updatedAt = updatedAt;
+                this.workMode = workMode;
                 this.employee = employee;
+                this.companyLocation = companyLocation;
         }
 
 }

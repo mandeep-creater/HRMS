@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/").permitAll()
-                       .requestMatchers( "/api/v1/company/**").permitAll()
+                       .requestMatchers( "/api/v1/company/**","/api/v1/employee/**","/api/v1/department/**","/api/v1/attendance/**").permitAll()
                        // .requestMatchers("/api/restaurant/menu/bulk/upload").hasAuthority("RESTAURANT")
                         //.requestMatchers("/api/restaurant/**").hasAuthority("RESTAURANT")
                         .requestMatchers("/admin_only/**").hasAuthority("ADMIN")

@@ -5,115 +5,120 @@ import com.hrms.enums.Role;
 import com.hrms.enums.Status;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 public class EmployeeResponseDTO {
 
     private Long eId;
 
-    private String companyCode;
-
     private String eName;
 
-    private String eEmail;
-
+    private  String ePassword;
+    private String email;
     private String eDisgnation;
-
     private BigDecimal eSalary;
-
     private Date eJoinDate;
 
     private Long eManagerId;
-
     private Long eCreatedByHrId;
 
+    private String ePhone;
+    private Gender eGender;
+    private Status estatus;
     private Role role;
 
-    private Long departmentId;     // or departmentName
-
-    private String ePhone;
-
-    private Status estatus;
-
-    private Gender eGender;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updateAt;
-
+    private Long departmentId;
     private Long companyId;
+    private String companyCode;
 
-    public Long geteId() {
+    // ---------- Getters & Setters ---------- //
+
+    public Long getEId() {
         return eId;
     }
 
-    public void seteId(Long eId) {
+    public void setEId(Long eId) {
         this.eId = eId;
     }
 
-    public String getCompanyCode() {
-        return companyCode;
-    }
-
-    public void setCompanyCode(String companyCode) {
-        this.companyCode = companyCode;
-    }
-
-    public String geteName() {
+    public String getEName() {
         return eName;
     }
 
-    public void seteName(String eName) {
+    public void setEName(String eName) {
         this.eName = eName;
     }
 
-    public String geteEmail() {
-        return eEmail;
+    public String getEmail() {
+        return email;
     }
 
-    public void seteEmail(String eEmail) {
-        this.eEmail = eEmail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String geteDisgnation() {
+    public String getEDisgnation() {
         return eDisgnation;
     }
 
-    public void seteDisgnation(String eDisgnation) {
+    public void setEDisgnation(String eDisgnation) {
         this.eDisgnation = eDisgnation;
     }
 
-    public BigDecimal geteSalary() {
+    public BigDecimal getESalary() {
         return eSalary;
     }
 
-    public void seteSalary(BigDecimal eSalary) {
+    public void setESalary(BigDecimal eSalary) {
         this.eSalary = eSalary;
     }
 
-    public Date geteJoinDate() {
+    public Date getEJoinDate() {
         return eJoinDate;
     }
 
-    public void seteJoinDate(Date eJoinDate) {
+    public void setEJoinDate(Date eJoinDate) {
         this.eJoinDate = eJoinDate;
     }
 
-    public Long geteManagerId() {
+    public Long getEManagerId() {
         return eManagerId;
     }
 
-    public void seteManagerId(Long eManagerId) {
+    public void setEManagerId(Long eManagerId) {
         this.eManagerId = eManagerId;
     }
 
-    public Long geteCreatedByHrId() {
+    public Long getECreatedByHrId() {
         return eCreatedByHrId;
     }
 
-    public void seteCreatedByHrId(Long eCreatedByHrId) {
+    public void setECreatedByHrId(Long eCreatedByHrId) {
         this.eCreatedByHrId = eCreatedByHrId;
+    }
+
+    public String getEPhone() {
+        return ePhone;
+    }
+
+    public void setEPhone(String ePhone) {
+        this.ePhone = ePhone;
+    }
+
+    public Gender getEGender() {
+        return eGender;
+    }
+
+    public void setEGender(Gender eGender) {
+        this.eGender = eGender;
+    }
+
+    public Status getEstatus() {
+        return estatus;
+    }
+
+    public void setEstatus(Status estatus) {
+        this.estatus = estatus;
     }
 
     public Role getRole() {
@@ -132,51 +137,27 @@ public class EmployeeResponseDTO {
         this.departmentId = departmentId;
     }
 
-    public String getePhone() {
-        return ePhone;
-    }
-
-    public void setePhone(String ePhone) {
-        this.ePhone = ePhone;
-    }
-
-    public Status getEstatus() {
-        return estatus;
-    }
-
-    public void setEstatus(Status estatus) {
-        this.estatus = estatus;
-    }
-
-    public Gender geteGender() {
-        return eGender;
-    }
-
-    public void seteGender(Gender eGender) {
-        this.eGender = eGender;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdateAt() {
-        return updateAt;
-    }
-
-    public void setUpdateAt(LocalDateTime updateAt) {
-        this.updateAt = updateAt;
-    }
-
     public Long getCompanyId() {
         return companyId;
     }
 
     public void setCompanyId(Long companyId) {
         this.companyId = companyId;
+    }
+
+    public String getCompanyCode() {
+        return companyCode;
+    }
+
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
+    }
+
+    public String getEPassword() {
+        return ePassword;
+    }
+
+    public void setEPassword(String ePassword) {
+        this.ePassword = ePassword;
     }
 }

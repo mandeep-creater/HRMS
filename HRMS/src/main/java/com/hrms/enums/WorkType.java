@@ -2,11 +2,10 @@ package com.hrms.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-public enum Status {
-    ACTIVE,
-    TERMINATED,
-    NOTICE_PERIOD;
-
+public enum WorkType {
+    ONSITE,
+    WFH,
+    REMOTE;
     @JsonCreator
     public static Status fromString(String key) {
         if (key == null) return null;

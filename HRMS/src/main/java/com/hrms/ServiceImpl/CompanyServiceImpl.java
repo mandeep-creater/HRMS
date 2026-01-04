@@ -5,6 +5,7 @@ import com.hrms.Exceptions.ExceptionHandler;
 import com.hrms.Mapper.CmpMapper;
 import com.hrms.Repo.CompanyRepo;
 import com.hrms.RequestsDTO.CompanyRequestDTO;
+import com.hrms.ResponseDTO.CompanyDropdownDTO;
 import com.hrms.ResponseDTO.CompanyResponseDTO;
 import com.hrms.Service.CompanyService;
 import jakarta.transaction.Transactional;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -89,4 +92,13 @@ public class CompanyServiceImpl implements CompanyService {
         return companyMapper.toCompanyResponseDto(updatedCompany);
 
     }
+
+    @Override
+    public List<CompanyDropdownDTO> getCompanyDropdown() {
+        List<Company> db = companyRepo.getActiveCompanies();
+        return db.stream()
+                .map(c -> new CompanyDropdownDTO( c.getcId(),c.getCompanyName()))
+                .toList();
+    }
+
 }
