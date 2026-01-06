@@ -8,6 +8,12 @@ public class CompanyLocationResponseDTO {
 
     private Long id;
     private String locationName;
+
+
+    private String locationCode;
+
+    private String locationShortCode;
+    private String city;
     private String pincode;
     private BigDecimal latitude;
     private BigDecimal longitude;
@@ -77,5 +83,29 @@ public class CompanyLocationResponseDTO {
 
     public void setIs_active(boolean is_active) {
         this.is_active = is_active;
+    }
+
+    public String getLocationCode() {
+        return locationCode;
+    }
+
+    public void setLocationCode(String locationCode) {
+        this.locationCode = locationCode;
+    }
+
+    public String getLocationShortCode() {
+        return locationShortCode;
+    }
+
+    public void setLocationShortCode(String locationShortCode) {
+        this.locationShortCode = locationShortCode;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

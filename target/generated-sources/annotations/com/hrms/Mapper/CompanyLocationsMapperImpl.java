@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-01-04T19:17:36+0530",
+    date = "2026-01-06T20:16:36+0530",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.12 (Oracle Corporation)"
 )
 @Component
@@ -23,6 +23,7 @@ public class CompanyLocationsMapperImpl implements CompanyLocationsMapper {
 
         CompanyLocation companyLocation = new CompanyLocation();
 
+        companyLocation.setCity( companyLocationRequestDTO.getCity() );
         companyLocation.setLocationName( companyLocationRequestDTO.getLocationName() );
         companyLocation.setPincode( companyLocationRequestDTO.getPincode() );
         companyLocation.setLatitude( companyLocationRequestDTO.getLatitude() );
@@ -45,6 +46,9 @@ public class CompanyLocationsMapperImpl implements CompanyLocationsMapper {
             companyLocationResponseDTO.setCompanyId( cId.longValue() );
         }
         companyLocationResponseDTO.setCompanyCode( companyLocationCompanyCompanyCode( companyLocation ) );
+        companyLocationResponseDTO.setLocationCode( companyLocation.getLocationCode() );
+        companyLocationResponseDTO.setLocationShortCode( companyLocation.getLocationShortCode() );
+        companyLocationResponseDTO.setCity( companyLocation.getCity() );
         companyLocationResponseDTO.setCreatedAt( companyLocation.getCreatedAt() );
         companyLocationResponseDTO.setUpdatedAt( companyLocation.getUpdatedAt() );
         companyLocationResponseDTO.setId( companyLocation.getId() );
@@ -53,6 +57,7 @@ public class CompanyLocationsMapperImpl implements CompanyLocationsMapper {
         companyLocationResponseDTO.setLatitude( companyLocation.getLatitude() );
         companyLocationResponseDTO.setLongitude( companyLocation.getLongitude() );
         companyLocationResponseDTO.setAllowedRadiusInMeters( companyLocation.getAllowedRadiusInMeters() );
+        companyLocationResponseDTO.setIs_active( companyLocation.getIs_active() );
 
         return companyLocationResponseDTO;
     }

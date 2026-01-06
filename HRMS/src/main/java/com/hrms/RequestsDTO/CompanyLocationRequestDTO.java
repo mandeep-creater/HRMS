@@ -8,6 +8,12 @@ public class CompanyLocationRequestDTO {
     //@NotBlank(message = "Location name is required")
     private String locationName;
 
+    private String city;
+
+
+    //private String locationShortCode;
+
+
 //    @NotBlank(message = "Pincode is required")
 //    @Pattern(regexp = "^[1-9][0-9]{5}$", message = "Invalid Indian pincode")
     private String pincode;
@@ -51,7 +57,23 @@ public class CompanyLocationRequestDTO {
     public Long getCompanyId() { return companyId; }
     public void setCompanyId(Long companyId) { this.companyId = companyId; }
 
-//    public String getCompanyCode() {
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+//    public String getLocationShortCode() {
+//        return locationShortCode;
+//    }
+//
+//    public void setLocationShortCode(String locationShortCode) {
+//        this.locationShortCode = locationShortCode;
+//    }
+
+    //    public String getCompanyCode() {
 //        return companyCode;
 //    }
 //

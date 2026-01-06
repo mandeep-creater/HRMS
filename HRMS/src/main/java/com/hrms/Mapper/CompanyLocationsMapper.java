@@ -10,9 +10,13 @@ import org.mapstruct.Mapping;
 public interface CompanyLocationsMapper {
 
     @Mapping(target = "company",ignore = true)
+    @Mapping(source = "city", target = "city")
     CompanyLocation toEntity(CompanyLocationRequestDTO companyLocationRequestDTO);
     @Mapping(source = "company.cId", target = "companyId")
     @Mapping(source = "company.companyCode", target = "companyCode")
+    @Mapping(source = "locationCode", target = "locationCode")
+    @Mapping(source = "locationShortCode", target = "locationShortCode")
+    @Mapping(source = "city", target = "city")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
     CompanyLocationResponseDTO toDto(CompanyLocation companyLocation);

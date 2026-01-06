@@ -1,5 +1,6 @@
 package com.hrms.Repo;
 
+import com.hrms.Entity.Company;
 import com.hrms.Entity.CompanyLocation;
 import jakarta.persistence.Id;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,6 @@ import java.util.List;
 public interface CompanyLocationsRepo extends JpaRepository<CompanyLocation,Long>{
 
     List<CompanyLocation> findByCompanyCId(int intExact);
+
+    boolean existsByCompanyAndLocationShortCode(Company company, String shortCode);
 }

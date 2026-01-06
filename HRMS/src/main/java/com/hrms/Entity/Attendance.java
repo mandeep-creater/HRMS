@@ -1,5 +1,6 @@
 package com.hrms.Entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hrms.enums.AttendanceStatus;
 import com.hrms.enums.WorkType;
 import jakarta.persistence.*;
@@ -18,8 +19,11 @@ public class Attendance extends  BaseEntity {
 
         private LocalDate date;
 
-        private LocalDateTime checkIn;
+        private Double totalHours;
 
+        @JsonFormat(pattern = "HH:mm:ss")
+        private LocalDateTime checkIn;
+        @JsonFormat(pattern = "HH:mm:ss")
         private LocalDateTime checkOut;
 
         private BigDecimal latitude;
@@ -140,17 +144,19 @@ public class Attendance extends  BaseEntity {
                 this.companyLocation = companyLocation;
         }
 
-        public Attendance(LocalDate date,
-                          LocalDateTime checkIn,
-                          LocalDateTime checkOut,
-                          BigDecimal latitude,
-                          BigDecimal longitude,
-                          String ipAddress,
-                          AttendanceStatus status,
-                          WorkType workMode,
-                          Employee employee,
-                          CompanyLocation companyLocation) {
+
+
+        public Double getTotalHours() {
+                return totalHours;
+        }
+
+        public void setTotalHours(Double totalHours) {
+                this.totalHours = totalHours;
+        }
+
+        public Attendance(LocalDate date, Double totalHours, LocalDateTime checkIn, LocalDateTime checkOut, BigDecimal latitude, BigDecimal longitude, String ipAddress, AttendanceStatus status, WorkType workMode, CompanyLocation companyLocation, Employee employee) {
                 this.date = date;
+                this.totalHours = totalHours;
                 this.checkIn = checkIn;
                 this.checkOut = checkOut;
                 this.latitude = latitude;
@@ -158,8 +164,7 @@ public class Attendance extends  BaseEntity {
                 this.ipAddress = ipAddress;
                 this.status = status;
                 this.workMode = workMode;
-                this.employee = employee;
                 this.companyLocation = companyLocation;
+                this.employee = employee;
         }
-
 }

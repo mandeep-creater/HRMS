@@ -13,7 +13,13 @@ public class CompanyLocation extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String locationCode;
+
+    private String locationShortCode;
+
     private String locationName;
+
+    private String city;
 
     @Column(length = 6)
     private String pincode;
@@ -33,6 +39,19 @@ public class CompanyLocation extends BaseEntity {
     private Company company;
 
     public CompanyLocation() {
+    }
+
+    public CompanyLocation(String locationCode, String locationShortCode, String locationName, String city, String pincode, BigDecimal latitude, BigDecimal longitude, boolean is_active, Integer allowedRadiusInMeters, Company company) {
+        this.locationCode = locationCode;
+        this.locationShortCode = locationShortCode;
+        this.locationName = locationName;
+        this.city = city;
+        this.pincode = pincode;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.is_active = is_active;
+        this.allowedRadiusInMeters = allowedRadiusInMeters;
+        this.company = company;
     }
 
     public CompanyLocation(String locationName, String pincode, BigDecimal latitude, BigDecimal longitude, Boolean is_active, Integer allowedRadiusInMeters, Company company) {
@@ -107,5 +126,29 @@ public class CompanyLocation extends BaseEntity {
 
     public void setIs_active(boolean is_active) {
         this.is_active = is_active;
+    }
+
+    public String getLocationCode() {
+        return locationCode;
+    }
+
+    public void setLocationCode(String locationCode) {
+        this.locationCode = locationCode;
+    }
+
+    public String getLocationShortCode() {
+        return locationShortCode;
+    }
+
+    public void setLocationShortCode(String locationShortCode) {
+        this.locationShortCode = locationShortCode;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

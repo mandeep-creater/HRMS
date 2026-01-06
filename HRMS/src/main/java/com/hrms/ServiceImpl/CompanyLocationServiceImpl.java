@@ -38,6 +38,12 @@ public class CompanyLocationServiceImpl implements CompanyLocationService {
         if(requestDTO.getCompanyId() == null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Company ID is missing in the request!");
         }
+        if(requestDTO.getLocationName() == null || requestDTO.getLocationName().isBlank()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location name is required");
+        }
+        if(requestDTO.getCity() == null || requestDTO.getCity().isBlank()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "City is required");
+        }
 
         // 2. Find Company
         // Seedha Math.toIntExact(requestDTO.getCompanyId()) use karein, long cid ki extra line ki zarurat nahi
@@ -53,16 +59,23 @@ public class CompanyLocationServiceImpl implements CompanyLocationService {
 
         // 4. Manual Link (This is mandatory for the Foreign Key)
         cl.setCompany(company);
-
+        //Auto-generate locationShortCode if missing
+        cl.setLocationShortCode(generateLocationShortCode(requestDTO.getLocationName(), company));
+        //Auto-generate locationCode: shortCode + companyCode + cityCode
+        String cityCode = requestDTO.getCity().substring(0, Math.min(2, requestDTO.getCity().length())).toUpperCase();
+        cl.setLocationCode(cl.getLocationShortCode() + "-" + company.getCompanyCode() + "-" + cityCode);
+//        System.out.println("Request Dto see ::-> "+requestDTO.getCity());
+//        System.out.println("Cityyy db se company ki ::__>> "+cl.getCity());
         //5.for softdelet
        // cl.setIs_active(true);
         // 6. Save to DB
-        CompanyLocation savedCompanyLocation = companyLocationsRepo.save(cl);
+       CompanyLocation savedCompanyLocation = companyLocationsRepo.save(cl);
 
-        System.out.println(" Saved Successfully: ID " + savedCompanyLocation.getId());
+      //  System.out.println(" Saved Successfully: ID " + savedCompanyLocation.getId());
 
         // 6. Return Response
         return companyLocationsMapper.toDto(savedCompanyLocation);
+
     }
 
     @Override
@@ -119,4 +132,27 @@ public class CompanyLocationServiceImpl implements CompanyLocationService {
 
         return "Operation Done Successfully";
     }
+
+
+
+    private String generateLocationShortCode(String locationName, Company company) {
+        // 1️⃣ Take first letters of words
+        String[] words = locationName.trim().split("\\s+");
+        StringBuilder sb = new StringBuilder();
+        for (String word : words) {
+            if (!word.isEmpty()) sb.append(Character.toUpperCase(word.charAt(0)));
+        }
+
+        String baseCode = sb.toString();
+
+        // 2️⃣ Check existing codes in DB
+        int counter = 1;
+        String shortCode = baseCode;
+        while (companyLocationsRepo.existsByCompanyAndLocationShortCode(company, shortCode)) {
+            shortCode = baseCode + counter++;
+        }
+
+        return shortCode;
+    }
+
 }

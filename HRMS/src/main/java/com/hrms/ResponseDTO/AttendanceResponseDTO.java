@@ -2,6 +2,7 @@ package com.hrms.ResponseDTO;
 
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hrms.enums.AttendanceStatus;
 import com.hrms.enums.WorkType;
 
@@ -15,7 +16,9 @@ public class AttendanceResponseDTO {
 
         private Long attendanceId;
         private LocalDate date;
+//    @JsonFormat(pattern = "HH:mm:ss")
         private LocalDateTime checkIn;
+//    @JsonFormat(pattern = "HH:mm:ss")
         private LocalDateTime checkOut;
         private BigDecimal latitude;
         private BigDecimal longitude;
