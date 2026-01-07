@@ -32,6 +32,10 @@ public class AttendanceResponseDTO {
         private Long companyLocationId;
         private String companyLocationName; // optional
 
+    private  double toatlworkingHour;
+
+    private  String companyLocationCode;
+
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
 
@@ -162,5 +166,21 @@ public class AttendanceResponseDTO {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getCompanyLocationCode() {
+        return companyLocationCode;
+    }
+
+    public void setCompanyLocationCode(String companyLocationCode) {
+        this.companyLocationCode = companyLocationCode;
+    }
+
+    public double getToatlworkingHour() {
+        return toatlworkingHour;
+    }
+
+    public void setToatlworkingHour(double toatlworkingHour) {
+        this.toatlworkingHour = toatlworkingHour;
     }
 }

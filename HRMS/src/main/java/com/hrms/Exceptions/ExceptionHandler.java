@@ -37,11 +37,11 @@ public class ExceptionHandler {
         );
     }
 
-    public static ResponseStatusException handleBadRequest() {
+    public static  ResponseStatusException handleBadRequest(String msg) {
 
         return new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
-                "CompanyId is mandatory when Super Admin creates an employee "
+                msg
         );
     }
 
@@ -54,12 +54,20 @@ public class ExceptionHandler {
         );
     }
 
+    public static ResponseStatusException companyLocationNotFoundWithId(Long companyLocationId) {
+        return new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Company Location not found with this id: " + companyLocationId
+        );
+    }
+
     public static Object empNotFoundWithEmail(String email) {
         return new ResponseStatusException(
                 HttpStatus.NOT_FOUND,
                 "Employee not found with email: " + email
         );
     }
+
 
 
     public static class DuplicateDepartmentException extends RuntimeException {

@@ -1,9 +1,13 @@
 package com.hrms.ServiceImpl;
 
 import com.hrms.Entity.Company;
+import com.hrms.Entity.CompanyLocation;
+import com.hrms.Entity.Department;
 import com.hrms.Entity.Employee;
 import com.hrms.Mapper.EmployeeMapper;
+import com.hrms.Repo.CompanyLocationsRepo;
 import com.hrms.Repo.CompanyRepo;
+import com.hrms.Repo.DepartmentRepo;
 import com.hrms.RequestsDTO.EmployeeLoginDTO;
 import com.hrms.RequestsDTO.EmployeeRequestDTO;
 import com.hrms.RequestsDTO.PasswordChangeDTORequest;
@@ -39,6 +43,9 @@ public class AuthenticationServiceImpl {
     private CompanyRepo companyRepository;
 
     @Autowired
+    private CompanyLocationsRepo companyLocationsRepo;
+
+    @Autowired
     private  EmployeeMapper employeeMapper;
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -47,13 +54,20 @@ public class AuthenticationServiceImpl {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private DepartmentRepo departmentRepo;
+
 
     public EmployeeResponseDTO createAdminBySuperAdmin(EmployeeRequestDTO employeeRequestDTO) {
 
 
 
         if (employeeRequestDTO.getCompanyId() == null) {
-            ExceptionHandler.handleBadRequest();
+           throw  ExceptionHandler.handleBadRequest("CompanyId is Mandatory");
+        }
+
+        if(employeeRequestDTO.getCompanyLocationId() == null){
+           throw  ExceptionHandler.handleBadRequest("CompanyLocationId is Mandatory");
         }
 
         Company company = companyRepository.findById(Math.toIntExact(employeeRequestDTO.getCompanyId()))
@@ -61,6 +75,9 @@ public class AuthenticationServiceImpl {
                             ExceptionHandler.companyNotFoundWithId(employeeRequestDTO.getCompanyId())
                     );
 
+        CompanyLocation companyLocation = companyLocationsRepo.findById(employeeRequestDTO.getCompanyLocationId())
+                .orElseThrow(()-> ExceptionHandler.companyLocationNotFoundWithId(employeeRequestDTO.getCompanyLocationId())
+                );
             Employee employee = employeeMapper.toEmployeeEntity(employeeRequestDTO);
         String rawPassword = PasswordGenerator.generate();
             employee.setEPassword(
@@ -68,8 +85,19 @@ public class AuthenticationServiceImpl {
             );
             employee.setRole(Role.valueOf("ADMIN"));
             employee.setEDisgnation("ADMIN");
+            employee.setEstatus(Status.ACTIVE);
+            employee.setEJoinDate(new Date());
             // join date ,
+
             employee.setCompany(company);
+        if (!company.equals(companyLocation.getCompany())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Company and Company Location mismatch"
+            );
+        }
+            employee.setCompanyLocation(companyLocation);
+
             employee.setCompanyCode(company.getCompanyCode());
             Employee savedEmployee = empRepo.save(employee);
             //return employeeMapper.toEmpDto(savedEmployee,rawPassword);
@@ -102,6 +130,12 @@ public class AuthenticationServiceImpl {
     public EmployeeResponseDTO createEmpByAdminOrHr(EmployeeRequestDTO employeeRequestDTO) {
     String email = SecurityContextHolder.getContext().getAuthentication().getName();
      //   System.out.println("Loogedin Email "+email);
+        if(employeeRequestDTO.getCompanyLocationId() == null){
+            throw  ExceptionHandler.handleBadRequest("CompanyLocationId is Mandatory");
+        }
+        if(employeeRequestDTO.getDepartmentId() == null){
+            throw  ExceptionHandler.handleBadRequest("DepartmentId is Mandatory");
+        }
         Employee creatorCompany = empRepo.findByEEmail(email).orElseThrow(()->ExceptionHandler.companyNotFoundWithEmail(email));
 
        Company company1 = creatorCompany.getCompany();
@@ -119,8 +153,26 @@ public class AuthenticationServiceImpl {
     //  employee.setRole(employee.getRole());
 //        employee.setEDisgnation(employee.getEDisgnation());
         // join date ,
+        CompanyLocation companyLocation = companyLocationsRepo.findById(employeeRequestDTO.getCompanyLocationId())
+                .orElseThrow(()-> ExceptionHandler.companyLocationNotFoundWithId(employeeRequestDTO.getCompanyLocationId())
+                );
+        Department departmentOpt =
+                departmentRepo.findByIdAndCompanyCode(
+                        employeeRequestDTO.getDepartmentId(),
+                        company1.getCompanyCode()
+                );
+
+        if (departmentOpt == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Department does not belong to the selected company"
+            );
+        }
+
+        employee.setDepartment(departmentOpt);
         employee.setCompany(company1);
         employee.setCompanyCode(company1.getCompanyCode());
+        employee.setCompanyLocation(companyLocation);
         employee.setEstatus(Status.valueOf("ACTIVE"));
         employee.setECreatedByHrId(creatorCompany.getEId());
         employee.setEJoinDate(new Date());

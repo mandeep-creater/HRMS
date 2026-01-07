@@ -14,7 +14,9 @@ public interface EmployeeMapper {
 
     @Mapping(source = "company.cId", target = "companyId")
     @Mapping(source = "company.companyCode", target = "companyCode")
-   // @Mapping(source = "department.id", target = "departmentId")
+    @Mapping(source = "companyLocation.id",target = "companyLocationId")
+    @Mapping(source = "companyLocation.locationCode" , target = "companyLocationCode")
+    @Mapping(source = "department.id", target = "departmentId")
     EmployeeResponseDTO toEmpDto(Employee employee);
     @Mapping(source = "company.companyCode", target = "companyCode")
     @Mapping(source = "department.id", target = "departmentId")

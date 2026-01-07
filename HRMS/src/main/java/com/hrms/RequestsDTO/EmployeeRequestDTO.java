@@ -28,6 +28,8 @@ public class EmployeeRequestDTO {
     private Long departmentId;       // FK only
     private Long companyId;          // FK only
 
+    private Long companyLocationId; //FK only
+
     // ---------- Getters & Setters ---------- //
 
     public String getEName() {
@@ -140,5 +142,13 @@ public class EmployeeRequestDTO {
 
     public void setCompanyId(Long companyId) {
         this.companyId = companyId;
+    }
+
+    public Long getCompanyLocationId() {
+        return companyLocationId;
+    }
+
+    public void setCompanyLocationId(Long companyLocationId) {
+        this.companyLocationId = companyLocationId;
     }
 }

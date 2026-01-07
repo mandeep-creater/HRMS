@@ -1,6 +1,7 @@
 package com.hrms.Mapper;
 
 import com.hrms.Entity.Company;
+import com.hrms.Entity.CompanyLocation;
 import com.hrms.Entity.Department;
 import com.hrms.Entity.Employee;
 import com.hrms.RequestsDTO.EmployeeRequestDTO;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-01-03T12:36:14+0530",
+    date = "2026-01-07T20:29:46+0530",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.12 (Oracle Corporation)"
 )
 @Component
@@ -54,6 +55,9 @@ public class EmployeeMapperImpl implements EmployeeMapper {
             employeeResponseDTO.setCompanyId( cId.longValue() );
         }
         employeeResponseDTO.setCompanyCode( employeeCompanyCompanyCode( employee ) );
+        employeeResponseDTO.setCompanyLocationId( employeeCompanyLocationId( employee ) );
+        employeeResponseDTO.setCompanyLocationCode( employeeCompanyLocationLocationCode( employee ) );
+        employeeResponseDTO.setDepartmentId( employeeDepartmentId( employee ) );
         employeeResponseDTO.setEId( employee.getEId() );
         employeeResponseDTO.setEName( employee.getEName() );
         employeeResponseDTO.setEmail( employee.getEmail() );
@@ -79,7 +83,7 @@ public class EmployeeMapperImpl implements EmployeeMapper {
         EmployeeResponseForDepartmentDTO employeeResponseForDepartmentDTO = new EmployeeResponseForDepartmentDTO();
 
         employeeResponseForDepartmentDTO.setCompanyCode( employeeCompanyCompanyCode( e ) );
-        employeeResponseForDepartmentDTO.setDepartmentId( eDepartmentId( e ) );
+        employeeResponseForDepartmentDTO.setDepartmentId( employeeDepartmentId( e ) );
         Integer cId = employeeCompanyCId( e );
         if ( cId != null ) {
             employeeResponseForDepartmentDTO.setCompanyId( cId.longValue() );
@@ -126,7 +130,37 @@ public class EmployeeMapperImpl implements EmployeeMapper {
         return companyCode;
     }
 
-    private Long eDepartmentId(Employee employee) {
+    private Long employeeCompanyLocationId(Employee employee) {
+        if ( employee == null ) {
+            return null;
+        }
+        CompanyLocation companyLocation = employee.getCompanyLocation();
+        if ( companyLocation == null ) {
+            return null;
+        }
+        Long id = companyLocation.getId();
+        if ( id == null ) {
+            return null;
+        }
+        return id;
+    }
+
+    private String employeeCompanyLocationLocationCode(Employee employee) {
+        if ( employee == null ) {
+            return null;
+        }
+        CompanyLocation companyLocation = employee.getCompanyLocation();
+        if ( companyLocation == null ) {
+            return null;
+        }
+        String locationCode = companyLocation.getLocationCode();
+        if ( locationCode == null ) {
+            return null;
+        }
+        return locationCode;
+    }
+
+    private Long employeeDepartmentId(Employee employee) {
         if ( employee == null ) {
             return null;
         }

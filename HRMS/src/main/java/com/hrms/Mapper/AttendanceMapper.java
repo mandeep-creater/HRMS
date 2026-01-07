@@ -11,14 +11,20 @@ import javax.swing.*;
 
 @Mapper(componentModel = "spring")
 public interface AttendanceMapper {
-    @Mapping(target = "employee", ignore = true)
-    @Mapping(target = "companyLocation", ignore = true)
+    @Mapping(source = "workMode", target = "workMode")
+    @Mapping(source = "latitude", target = "latitude")
+    @Mapping(source = "longitude", target = "longitude")
     Attendance toEntity(AttendanceRequestDTO attendanceRequestDTO);
 
     //@Mapping(source = "companyLocation.locationName", target = "locationName")
-    @Mapping(target = "checkIn")
-    @Mapping(target = "checkOut")
-    @Mapping(target = "date")
+    @Mapping(source = "employee.EName", target = "employeeName")
+    @Mapping(source = "employee.EId", target = "employeeId")
+    @Mapping(source = "employee.email",target = "email")
+    @Mapping(source = "companyLocation.locationCode", target = "companyLocationCode")
+    @Mapping(source = "companyLocation.id", target = "companyLocationId")
+    @Mapping(source = "companyLocation.locationName" ,target="companyLocationName")
+    @Mapping(source = "totalHours", target = "toatlworkingHour")
+
     AttendanceResponseDTO toDto(Attendance attendance);
 
     default String formatDateTime(java.time.LocalDateTime dateTime) {

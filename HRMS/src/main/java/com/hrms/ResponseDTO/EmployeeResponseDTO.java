@@ -31,6 +31,10 @@ public class EmployeeResponseDTO {
     private Long companyId;
     private String companyCode;
 
+    private  Long companyLocationId;
+
+    private  String companyLocationCode;
+
     // ---------- Getters & Setters ---------- //
 
     public Long getEId() {
@@ -159,5 +163,21 @@ public class EmployeeResponseDTO {
 
     public void setEPassword(String ePassword) {
         this.ePassword = ePassword;
+    }
+
+    public Long getCompanyLocationId() {
+        return companyLocationId;
+    }
+
+    public void setCompanyLocationId(Long companyLocationId) {
+        this.companyLocationId = companyLocationId;
+    }
+
+    public String getCompanyLocationCode() {
+        return companyLocationCode;
+    }
+
+    public void setCompanyLocationCode(String companyLocationCode) {
+        this.companyLocationCode = companyLocationCode;
     }
 }

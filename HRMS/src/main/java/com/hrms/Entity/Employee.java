@@ -65,6 +65,10 @@ public class Employee extends BaseEntity implements UserDetails {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "company_location_id")
+    private CompanyLocation companyLocation;
+
     // ---------------- UserDetails ----------------
 
     @Override
@@ -227,5 +231,13 @@ public class Employee extends BaseEntity implements UserDetails {
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    public CompanyLocation getCompanyLocation() {
+        return companyLocation;
+    }
+
+    public void setCompanyLocation(CompanyLocation companyLocation) {
+        this.companyLocation = companyLocation;
     }
 }
