@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-01-09T13:15:20+0530",
+    date = "2026-01-09T14:08:18+0530",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.12 (Oracle Corporation)"
 )
 @Component
@@ -74,18 +74,17 @@ public class AttendanceMapperImpl implements AttendanceMapper {
         }
 
         AttendanceStatus attendanceStatus = null;
+        Object punchInTime = null;
+        Object punchOutTime = null;
         LocalDate date = null;
 
         attendanceStatus = attendance.getStatus();
+        punchInTime = formatDateTime( attendance.getCheckIn() );
+        punchOutTime = formatDateTime( attendance.getCheckOut() );
         date = attendance.getDate();
 
-        Object o = null;
-        Object o1 = null;
+        AttendanceDayResponse attendanceDayResponse = new AttendanceDayResponse( date, punchInTime, punchOutTime, attendanceStatus );
 
-        AttendanceDayResponse attendanceDayResponse = new AttendanceDayResponse( date, o, o1, attendanceStatus );
-
-        attendanceDayResponse.setPunchInTime( formatDateTime( attendance.getCheckIn() ) );
-        attendanceDayResponse.setPunchOutTime( formatDateTime( attendance.getCheckOut() ) );
         if ( attendance.getTotalHours() != null ) {
             attendanceDayResponse.setTotalWorkedHours( String.valueOf( attendance.getTotalHours() ) );
         }

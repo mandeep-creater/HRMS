@@ -4,6 +4,7 @@ import com.hrms.Entity.Attendance;
 import com.hrms.RequestsDTO.AttendanceRequestDTO;
 import com.hrms.ResponseDTO.AttendanceDayResponse;
 import com.hrms.ResponseDTO.AttendanceResponseDTO;
+import com.hrms.ResponseDTO.AttendanceSummaryResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,8 @@ public interface AttendanceMapper {
     @Mapping(source = "checkOut",target = "punchOutTime")
     @Mapping(source = "totalHours",target="totalWorkedHours")
     AttendanceDayResponse toDayDto(Attendance attendance);
+
+
 
 
 

@@ -10,7 +10,7 @@ public class AttendanceDayResponse {
     private String attendanceStatus;
     private String punchInTime;
     private String punchOutTime;
-    private String totalWorkedHours;
+    private Double totalWorkedHours;
 
 
 
@@ -49,11 +49,11 @@ public class AttendanceDayResponse {
         this.punchOutTime = punchOutTime;
     }
 
-    public String getTotalWorkedHours() {
+    public Double getTotalWorkedHours() {
         return totalWorkedHours;
     }
 
-    public void setTotalWorkedHours(String totalWorkedHours) {
+    public void setTotalWorkedHours(Double totalWorkedHours) {
         this.totalWorkedHours = totalWorkedHours;
     }
 
@@ -61,12 +61,14 @@ public class AttendanceDayResponse {
             LocalDate date,
             Object punchInTime,
             Object punchOutTime,
-            AttendanceStatus attendanceStatus
-    ) {
+            AttendanceStatus attendanceStatus,
+            Double totalWorkedHours) {
         this.date = date;
         this.punchInTime = punchInTime != null ? punchInTime.toString() : null;
         this.punchOutTime = punchOutTime != null ? punchOutTime.toString() : null;
         this.attendanceStatus = attendanceStatus != null ? attendanceStatus.name() : null;
+        this.totalWorkedHours = totalWorkedHours;
     }
+
 
 }

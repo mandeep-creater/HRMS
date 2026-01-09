@@ -5,7 +5,6 @@ import com.hrms.Entity.CompanyLocation;
 import com.hrms.Entity.Employee;
 import com.hrms.Mapper.AttendanceMapper;
 import com.hrms.Repo.AttendanceRepo;
-import com.hrms.Repo.CompanyLocationsRepo;
 import com.hrms.Repo.EmpRepo;
 import com.hrms.RequestsDTO.AttendanceRequestDTO;
 import com.hrms.ResponseDTO.AttendanceDayResponse;
@@ -24,7 +23,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -225,70 +223,133 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public AttendanceSummaryResponse getMyAttendanceByMonth( String email ,int month, int year) {
-//
-//        Employee employee = empRepo.findByEEmail(email)
-//                .orElseThrow(() -> new ResponseStatusException(
-//                        HttpStatus.FORBIDDEN,
-//                        "Authenticated user is not registered as an employee"
-//                ));
-//        Long  empid=  employee.getEId();
-//        //1. Set the Full date
-//        YearMonth ym = YearMonth.of(year, month);
-//        LocalDate start = ym.atDay(1);
-//        LocalDate end = ym.atEndOfMonth();
-//
-//        //2. Get The Attendance records dfor month
-//        List<Attendance> records =
-//                attendanceRepo.findByEmployeeAndDateBetween(employee, start, end);
-//
-////        records.forEach(a ->
-////                System.out.println(a.getDate() + " - " + a.getCheckIn() + " - " + a.getCheckOut() + " - " + a.getStatus())
-////        );
-//
-//
-//
-//        //3.Convert attendace list to map
-//        Map<LocalDate ,Attendance> attendanceMap =records.stream()
-//                .collect(Collectors.toMap(a->a.getDate(),a->a));
-//
-////        attendanceMap.forEach((k,v) ->
-////                System.out.println(k + " -> " + v.getCheckIn() + " - " + v.getCheckOut() + " - " + v.getStatus())
-////        );
-//        LocalDate joiningDate = employee.getEJoinDate()
-//                .toInstant()
-//                .atZone(ZoneId.systemDefault())
-//                .toLocalDate();
-//
-//        // 4. Build daily attendance
-//
-//        List<AttendanceDayResponse> dailyList =
-//                start.datesUntil(end.plusDays(1))
-//                        .map(date->{
-//                            Attendance a = attendanceMap.get(date);
-//
-//                            if (date.isBefore(joiningDate)) {
-//                                return new AttendanceDayResponse(date, null, null, AttendanceStatus.NOT_JOINED);
-//                            }return (a != null)
-//                                        ? new AttendanceDayResponse(date, a.getCheckIn(), a.getCheckOut(), a.getStatus())
-//                                        : new AttendanceDayResponse(date, null, null, AttendanceStatus.ABSENT);
-//                        })
-//                        .toList();
-//
-////        dailyList.forEach(a->
-////                System.out.println(a.getDate()+" "+a.getPunchInTime()+" "+a.getPunchOutTime()+" "+a.getAttendanceStatus()));
-//
-//        return new AttendanceSummaryResponse(
-//                employee.getEId(),
-//                employee.getEName(),
-//                month,
-//                year,
-//                dailyList
-//        );
-        return  null;
+
+        Employee employee = empRepo.findByEEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.FORBIDDEN,
+                        "Authenticated user is not registered as an employee"
+                ));
+        Long  empid=  employee.getEId();
+        //1. Set the Full date
+        YearMonth ym = YearMonth.of(year, month);
+        LocalDate start = ym.atDay(1);
+        LocalDate end = ym.atEndOfMonth();
+
+        //2. Get The Attendance records dfor month
+        List<Attendance> records =
+                attendanceRepo.findByEmployeeAndDateBetween(employee, start, end);
+
+        records.forEach(a ->
+                System.out.println("Dataaa of Attemdace "+a.getDate() + " - " + a.getCheckIn().toLocalTime() + " - " + a.getCheckOut().toLocalTime() + " - " + a.getStatus())
+        );
+
+
+        //3.Convert attendace list to map
+        Map<LocalDate ,Attendance> attendanceMap =records.stream()
+                .collect(Collectors.toMap(Attendance::getDate, a->a));
+
+        attendanceMap.forEach((k,v) ->
+                System.out.println("Attendace in MAp According to date "+k + " -> " + v.getCheckIn().toLocalTime() + " - " + v.getCheckOut().toLocalTime() + " - " + v.getStatus())
+        );
+
+
+        LocalDate joiningDate = employee.getEJoinDate()
+                .toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        LocalDate today = LocalDate.now();
+        //  Future month not allowed
+        if (start.isAfter(today.withDayOfMonth(1))) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Future attendance cannot be viewed"
+            );
+        }
+
+//  Employee not joined in this month at all
+        if (end.isBefore(joiningDate)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Employee was not part of the organization in the selected month"
+            );
+        }
+
+        LocalDate effectiveEndDate =
+                (start.getYear() == today.getYear() && start.getMonth() == today.getMonth())
+                        ? today                      // current month → only till today
+                        : end;
+
+        // 4. Build daily attendance
+
+        List<AttendanceDayResponse> dailyList =
+                start.datesUntil(effectiveEndDate.plusDays(1))
+                        .map(date->{
+                            Attendance a = attendanceMap.get(date);
+
+                            if (date.isBefore(joiningDate)) {
+                                return new AttendanceDayResponse(date, "--", "--", AttendanceStatus.NOT_JOINED, 00.0);
+                            }return (a != null )
+                                        ? new AttendanceDayResponse(date, a.getCheckIn().toLocalTime(), a.getCheckOut().toLocalTime(), a.getStatus(),a.getTotalHours())
+                                        : new AttendanceDayResponse(date, "00:00:00", "00:00:00", AttendanceStatus.ABSENT, 00.0);
+                        })
+                        .toList();
+
+        dailyList.forEach(a->
+                System.out.println("Get the List Of Month "+ a.getDate()+" "+a.getPunchInTime()+" "+a.getPunchOutTime()+" "+a.getAttendanceStatus()+" "+a.getTotalWorkedHours()));
+
+        return new AttendanceSummaryResponse(
+                employee.getEId(),
+                employee.getEName(),
+                month,
+                year,
+                dailyList
+        );
+ //       return  null;
     }
 
     @Override
     public AttendanceSummaryResponse getMyAttendanceByYear( String email , int year) {
+
+        LocalDate today = LocalDate.now();
+
+        //   Future year not allowed
+        if (year > today.getYear()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Future year attendance cannot be viewed"
+            );
+        }
+        Employee employee = empRepo.findByEEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.FORBIDDEN,
+                        "Authenticated user is not registered as an employee"
+                ));
+
+        LocalDate joiningDate = employee.getEJoinDate()
+                .toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+
+        if (year < joiningDate.getYear()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Employee was not part of the organization in this year"
+            );
+        }
+        LocalDate startOfYear = LocalDate.of(year, 1, 1);
+        LocalDate endOfYear =
+                (year == today.getYear()) ? today : LocalDate.of(year, 12, 31);
+
+        // Fetch all attendance in one query
+        List<Attendance> attendanceList =
+                attendanceRepo.findByEmployeeAndDateBetween(
+                        employee, startOfYear, endOfYear
+                );
+
+
+
+
+
         return null;
     }
 

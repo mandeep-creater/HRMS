@@ -1,22 +1,54 @@
 package com.hrms.ResponseDTO;
 
+
+
 import java.util.List;
 
 public class AttendanceSummaryResponse {
-    private Long employeeId;
-    private String employeeCode;
-    private String employeeName;
 
+    private Long employeeId;
+    private String employeeName;
     private int month;
     private int year;
-
-    private int totalWorkingDays;
-    private int presentDays;
-    private int absentDays;
-    private int halfDays;
-
     private List<AttendanceDayResponse> dailyAttendance;
 
-    public AttendanceSummaryResponse(Long eId, String eName, int month, int year, List<AttendanceDayResponse> dailyList) {
+    public AttendanceSummaryResponse() {
+    }
+
+    // Constructor you are already using
+    public AttendanceSummaryResponse(
+            Long employeeId,
+            String employeeName,
+            int month,
+            int year,
+            List<AttendanceDayResponse> dailyAttendance
+    ) {
+        this.employeeId = employeeId;
+        this.employeeName = employeeName;
+        this.month = month;
+        this.year = year;
+        this.dailyAttendance = dailyAttendance;
+    }
+
+    // ✅ GETTERS (MOST IMPORTANT)
+
+    public Long getEmployeeId() {
+        return employeeId;
+    }
+
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public List<AttendanceDayResponse> getDailyAttendance() {
+        return dailyAttendance;
     }
 }
