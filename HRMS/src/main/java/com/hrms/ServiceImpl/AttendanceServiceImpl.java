@@ -8,7 +8,10 @@ import com.hrms.Repo.AttendanceRepo;
 import com.hrms.Repo.CompanyLocationsRepo;
 import com.hrms.Repo.EmpRepo;
 import com.hrms.RequestsDTO.AttendanceRequestDTO;
+import com.hrms.ResponseDTO.AttendanceDayResponse;
 import com.hrms.ResponseDTO.AttendanceResponseDTO;
+import com.hrms.ResponseDTO.AttendanceSummaryResponse;
+import com.hrms.ResponseDTO.AttendanceTodayResponse;
 import com.hrms.Service.AttendanceService;
 import com.hrms.Utility.GeoUtil;
 import com.hrms.enums.AttendanceStatus;
@@ -24,8 +27,10 @@ import org.springframework.web.server.ResponseStatusException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -104,15 +109,15 @@ public class AttendanceServiceImpl implements AttendanceService {
         attendance.setCheckIn(LocalDateTime.now());// server-generated
         attendance.setStatus(AttendanceStatus.PRESENT);
 
-        System.out.println("Attendance Saved:");
-        System.out.println("ID: " + attendance.getAttendanceId());
-        System.out.println("Employee: " + attendance.getEmployee().getEName() + " (ID: " + attendance.getEmployee().getEId() + ")");
-        System.out.println("Company Location: " + attendance.getCompanyLocation().getLocationCode());
-        System.out.println("Date: " + attendance.getDate());
-        System.out.println("Check-in: " + attendance.getCheckIn());
-        System.out.println("Latitude: " + attendance.getLatitude());
-        System.out.println("Longitude: " + attendance.getLongitude());
-        System.out.println("Status: " + attendance.getStatus());
+//        System.out.println("Attendance Saved:");
+//        System.out.println("ID: " + attendance.getAttendanceId());
+//        System.out.println("Employee: " + attendance.getEmployee().getEName() + " (ID: " + attendance.getEmployee().getEId() + ")");
+//        System.out.println("Company Location: " + attendance.getCompanyLocation().getLocationCode());
+//        System.out.println("Date: " + attendance.getDate());
+//        System.out.println("Check-in: " + attendance.getCheckIn());
+//        System.out.println("Latitude: " + attendance.getLatitude());
+//        System.out.println("Longitude: " + attendance.getLongitude());
+//        System.out.println("Status: " + attendance.getStatus());
 
        Attendance savedAttendance = attendanceRepo.save(attendance);
            //   return null;
@@ -176,9 +181,9 @@ public class AttendanceServiceImpl implements AttendanceService {
         if (checkInTime != null) {
             long minutesWorked = java.time.Duration.between(checkInTime, attendance.getCheckOut()).toMinutes();
             double hoursWorked = (long) (minutesWorked / 60.0); // convert to decimal hours
-           // System.out.println(" checout :::___>> "+hoursWorked);
+            // System.out.println(" checout :::___>> "+hoursWorked);
             attendance.setTotalHours(hoursWorked);     // make sure your Attendance entity has a totalHours field
- }
+        }
 
 
         // 5 Save attendance
@@ -194,7 +199,111 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 
     @Override
-    public AttendanceResponseDTO getTodayAttendance() {
+    public AttendanceDayResponse getTodayAttendance(String email) {
+
+//        // 1 Get logged-in employee
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        String email = auth.getName();
+
+        Employee employee = empRepo.findByEEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.FORBIDDEN,
+                        "Authenticated user is not registered as an employee"
+                ));
+       Long  empid=  employee.getEId();
+
+      Attendance attendance= attendanceRepo.findByEmployeeAndDate(employee,LocalDate.now())
+              .orElseThrow(() -> new ResponseStatusException(
+                      HttpStatus.NOT_FOUND,
+                      "Not able to fetch the data from the Attendance Because you Not MARk the Attendance Today"
+              ));
+
+        System.out.println("Making Attendemce emp is :: "+" "+ employee.getEName() +" "+attendance.getStatus()+" "+attendance.getWorkMode()  );
+
+        return attendanceMapper.toDayDto(attendance);
+    }
+
+    @Override
+    public AttendanceSummaryResponse getMyAttendanceByMonth( String email ,int month, int year) {
+//
+//        Employee employee = empRepo.findByEEmail(email)
+//                .orElseThrow(() -> new ResponseStatusException(
+//                        HttpStatus.FORBIDDEN,
+//                        "Authenticated user is not registered as an employee"
+//                ));
+//        Long  empid=  employee.getEId();
+//        //1. Set the Full date
+//        YearMonth ym = YearMonth.of(year, month);
+//        LocalDate start = ym.atDay(1);
+//        LocalDate end = ym.atEndOfMonth();
+//
+//        //2. Get The Attendance records dfor month
+//        List<Attendance> records =
+//                attendanceRepo.findByEmployeeAndDateBetween(employee, start, end);
+//
+////        records.forEach(a ->
+////                System.out.println(a.getDate() + " - " + a.getCheckIn() + " - " + a.getCheckOut() + " - " + a.getStatus())
+////        );
+//
+//
+//
+//        //3.Convert attendace list to map
+//        Map<LocalDate ,Attendance> attendanceMap =records.stream()
+//                .collect(Collectors.toMap(a->a.getDate(),a->a));
+//
+////        attendanceMap.forEach((k,v) ->
+////                System.out.println(k + " -> " + v.getCheckIn() + " - " + v.getCheckOut() + " - " + v.getStatus())
+////        );
+//        LocalDate joiningDate = employee.getEJoinDate()
+//                .toInstant()
+//                .atZone(ZoneId.systemDefault())
+//                .toLocalDate();
+//
+//        // 4. Build daily attendance
+//
+//        List<AttendanceDayResponse> dailyList =
+//                start.datesUntil(end.plusDays(1))
+//                        .map(date->{
+//                            Attendance a = attendanceMap.get(date);
+//
+//                            if (date.isBefore(joiningDate)) {
+//                                return new AttendanceDayResponse(date, null, null, AttendanceStatus.NOT_JOINED);
+//                            }return (a != null)
+//                                        ? new AttendanceDayResponse(date, a.getCheckIn(), a.getCheckOut(), a.getStatus())
+//                                        : new AttendanceDayResponse(date, null, null, AttendanceStatus.ABSENT);
+//                        })
+//                        .toList();
+//
+////        dailyList.forEach(a->
+////                System.out.println(a.getDate()+" "+a.getPunchInTime()+" "+a.getPunchOutTime()+" "+a.getAttendanceStatus()));
+//
+//        return new AttendanceSummaryResponse(
+//                employee.getEId(),
+//                employee.getEName(),
+//                month,
+//                year,
+//                dailyList
+//        );
+        return  null;
+    }
+
+    @Override
+    public AttendanceSummaryResponse getMyAttendanceByYear( String email , int year) {
+        return null;
+    }
+
+    @Override
+    public List<AttendanceTodayResponse> getTodayAttendanceByCompany(String companyShortCode, Long requestedByUserId) {
+        return null;
+    }
+
+    @Override
+    public List<AttendanceSummaryResponse> getAttendanceByMonthForCompany(String companyShortCode, int month, int year, Long requestedByUserId) {
+        return null;
+    }
+
+    @Override
+    public List<AttendanceSummaryResponse> getAttendanceByYearForCompany(String companyShortCode, int year, Long requestedByUserId) {
         return null;
     }
 }

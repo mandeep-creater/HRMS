@@ -4,13 +4,16 @@ import com.hrms.Entity.Attendance;
 import com.hrms.Entity.CompanyLocation;
 import com.hrms.Entity.Employee;
 import com.hrms.RequestsDTO.AttendanceRequestDTO;
+import com.hrms.ResponseDTO.AttendanceDayResponse;
 import com.hrms.ResponseDTO.AttendanceResponseDTO;
+import com.hrms.enums.AttendanceStatus;
+import java.time.LocalDate;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-01-07T21:47:08+0530",
+    date = "2026-01-09T13:15:20+0530",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.12 (Oracle Corporation)"
 )
 @Component
@@ -62,6 +65,32 @@ public class AttendanceMapperImpl implements AttendanceMapper {
         attendanceResponseDTO.setUpdatedAt( attendance.getUpdatedAt() );
 
         return attendanceResponseDTO;
+    }
+
+    @Override
+    public AttendanceDayResponse toDayDto(Attendance attendance) {
+        if ( attendance == null ) {
+            return null;
+        }
+
+        AttendanceStatus attendanceStatus = null;
+        LocalDate date = null;
+
+        attendanceStatus = attendance.getStatus();
+        date = attendance.getDate();
+
+        Object o = null;
+        Object o1 = null;
+
+        AttendanceDayResponse attendanceDayResponse = new AttendanceDayResponse( date, o, o1, attendanceStatus );
+
+        attendanceDayResponse.setPunchInTime( formatDateTime( attendance.getCheckIn() ) );
+        attendanceDayResponse.setPunchOutTime( formatDateTime( attendance.getCheckOut() ) );
+        if ( attendance.getTotalHours() != null ) {
+            attendanceDayResponse.setTotalWorkedHours( String.valueOf( attendance.getTotalHours() ) );
+        }
+
+        return attendanceDayResponse;
     }
 
     private String attendanceEmployeeEName(Attendance attendance) {

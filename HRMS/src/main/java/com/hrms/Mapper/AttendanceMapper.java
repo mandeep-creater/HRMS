@@ -2,6 +2,7 @@ package com.hrms.Mapper;
 
 import com.hrms.Entity.Attendance;
 import com.hrms.RequestsDTO.AttendanceRequestDTO;
+import com.hrms.ResponseDTO.AttendanceDayResponse;
 import com.hrms.ResponseDTO.AttendanceResponseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -26,6 +27,14 @@ public interface AttendanceMapper {
     @Mapping(source = "totalHours", target = "toatlworkingHour")
 
     AttendanceResponseDTO toDto(Attendance attendance);
+
+    @Mapping(source = "status", target = "attendanceStatus")
+    @Mapping(source = "checkIn", target = "punchInTime")
+    @Mapping(source = "checkOut",target = "punchOutTime")
+    @Mapping(source = "totalHours",target="totalWorkedHours")
+    AttendanceDayResponse toDayDto(Attendance attendance);
+
+
 
     default String formatDateTime(java.time.LocalDateTime dateTime) {
         if (dateTime == null) return null;
