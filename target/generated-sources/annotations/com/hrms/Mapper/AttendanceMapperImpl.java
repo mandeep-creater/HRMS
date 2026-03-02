@@ -6,14 +6,12 @@ import com.hrms.Entity.Employee;
 import com.hrms.RequestsDTO.AttendanceRequestDTO;
 import com.hrms.ResponseDTO.AttendanceDayResponse;
 import com.hrms.ResponseDTO.AttendanceResponseDTO;
-import com.hrms.enums.AttendanceStatus;
-import java.time.LocalDate;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-01-09T14:08:18+0530",
+    date = "2026-01-29T20:53:16+0530",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.12 (Oracle Corporation)"
 )
 @Component
@@ -73,21 +71,15 @@ public class AttendanceMapperImpl implements AttendanceMapper {
             return null;
         }
 
-        AttendanceStatus attendanceStatus = null;
-        Object punchInTime = null;
-        Object punchOutTime = null;
-        LocalDate date = null;
+        AttendanceDayResponse attendanceDayResponse = new AttendanceDayResponse();
 
-        attendanceStatus = attendance.getStatus();
-        punchInTime = formatDateTime( attendance.getCheckIn() );
-        punchOutTime = formatDateTime( attendance.getCheckOut() );
-        date = attendance.getDate();
-
-        AttendanceDayResponse attendanceDayResponse = new AttendanceDayResponse( date, punchInTime, punchOutTime, attendanceStatus );
-
-        if ( attendance.getTotalHours() != null ) {
-            attendanceDayResponse.setTotalWorkedHours( String.valueOf( attendance.getTotalHours() ) );
+        if ( attendance.getStatus() != null ) {
+            attendanceDayResponse.setAttendanceStatus( attendance.getStatus().name() );
         }
+        attendanceDayResponse.setPunchInTime( formatDateTime( attendance.getCheckIn() ) );
+        attendanceDayResponse.setPunchOutTime( formatDateTime( attendance.getCheckOut() ) );
+        attendanceDayResponse.setTotalWorkedHours( attendance.getTotalHours() );
+        attendanceDayResponse.setDate( attendance.getDate() );
 
         return attendanceDayResponse;
     }

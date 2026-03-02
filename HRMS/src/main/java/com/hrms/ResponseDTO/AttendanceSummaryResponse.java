@@ -16,13 +16,9 @@ public class AttendanceSummaryResponse {
     }
 
     // Constructor you are already using
-    public AttendanceSummaryResponse(
-            Long employeeId,
-            String employeeName,
-            int month,
-            int year,
-            List<AttendanceDayResponse> dailyAttendance
-    ) {
+
+
+    public AttendanceSummaryResponse(Long employeeId, String employeeName, int month, int year, List<AttendanceDayResponse> dailyAttendance) {
         this.employeeId = employeeId;
         this.employeeName = employeeName;
         this.month = month;

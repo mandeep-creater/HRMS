@@ -1,8 +1,11 @@
 package com.hrms.ResponseDTO;
 
 import com.hrms.enums.AttendanceStatus;
+import com.hrms.enums.WorkType;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class AttendanceDayResponse {
 
@@ -12,8 +15,14 @@ public class AttendanceDayResponse {
     private String punchOutTime;
     private Double totalWorkedHours;
 
+    public AttendanceDayResponse() {
+    }
 
+    public AttendanceDayResponse(AttendanceStatus status, LocalDate date, LocalDateTime checkIn, LocalDateTime checkOut, Double totalHours, WorkType workMode) {
+    }
 
+    public AttendanceDayResponse(LocalDate date, LocalTime localTime, LocalTime localTime1, AttendanceStatus status, Double totalHours) {
+    }
 
 
     public LocalDate getDate() {
@@ -57,18 +66,14 @@ public class AttendanceDayResponse {
         this.totalWorkedHours = totalWorkedHours;
     }
 
-    public AttendanceDayResponse(
-            LocalDate date,
-            Object punchInTime,
-            Object punchOutTime,
-            AttendanceStatus attendanceStatus,
-            Double totalWorkedHours) {
+
+    public AttendanceDayResponse(LocalDate date, String attendanceStatus, String punchInTime, String punchOutTime, Double totalWorkedHours) {
         this.date = date;
-        this.punchInTime = punchInTime != null ? punchInTime.toString() : null;
-        this.punchOutTime = punchOutTime != null ? punchOutTime.toString() : null;
-        this.attendanceStatus = attendanceStatus != null ? attendanceStatus.name() : null;
+        this.attendanceStatus = attendanceStatus;
+        this.punchInTime = punchInTime;
+        this.punchOutTime = punchOutTime;
         this.totalWorkedHours = totalWorkedHours;
     }
-
-
+    
+    
 }

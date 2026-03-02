@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -52,10 +53,16 @@ public class AttendanceController {
         return  ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(200,true,res,"Attendance Fetch Successfully By Month!"));
     }
-    @GetMapping("/me/year")
-    public ResponseEntity<ApiResponse<AttendanceSummaryResponse>> getMyAttendanceByYear(
-            @RequestParam int year){
-        return  null;
+    @GetMapping("/me/year") //need change in the service because some casting issue is there
+    public ResponseEntity<ApiResponse<List<AttendanceSummaryResponse>>> getMyAttendanceByYear(
+            Principal principal,@RequestParam int year ){
+       // int finalYear = (year != null) ? year : LocalDate.now().getYear();
+        String email = principal.getName();
+       List <AttendanceSummaryResponse> res=  attendanceService.getMyAttendanceByYear(email, year);
+        //      AttendanceDayResponse
+        return  ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(200,true,res,"Attendance Fetch Successfully By Month!"));
+
     }
 
     @GetMapping("/company/today")

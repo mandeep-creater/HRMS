@@ -16,7 +16,7 @@ public interface AttendanceService {
 
 
     AttendanceSummaryResponse getMyAttendanceByMonth(String email, int month, int year);
-    AttendanceSummaryResponse getMyAttendanceByYear(String email ,  int year);
+  List  <AttendanceSummaryResponse> getMyAttendanceByYear(String email ,  int year);
 
     // HR / Admin (company-wise)
     List<AttendanceTodayResponse> getTodayAttendanceByCompany(
